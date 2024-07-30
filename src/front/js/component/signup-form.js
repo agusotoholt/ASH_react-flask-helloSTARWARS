@@ -2,7 +2,6 @@ import React, { useContext, useState } from "react";
 import { Context } from "../store/appContext";
 import { useNavigate } from "react-router-dom";
 
-
 export const SignupForm = () => {
 	const { store, actions } = useContext(Context)
     const navigate = useNavigate()
@@ -11,12 +10,18 @@ export const SignupForm = () => {
 
     function handleSubmit(e) {
         e.preventDefault()
+        if (email == "" || password == ""){
+            alert("Neither Email nor Password must be blank")
+            return
+        }
         let signed = actions.signup(email,password)
         if (signed) {
             navigate('/login')
+            return
         }
         setPassword("")
         setEmail("")
+        alert("Try again")
     }
 
 	return (
