@@ -2,23 +2,21 @@ import React, { useContext, useState } from "react";
 import { Context } from "../store/appContext";
 import { useNavigate } from "react-router-dom";
 
-export const LoginForm = () => {
+
+export const SignupForm = () => {
 	const { store, actions } = useContext(Context)
     const navigate = useNavigate()
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
 
-    async function handleSubmit(e) {
+    function handleSubmit(e) {
         e.preventDefault()
-        let logged = await actions.login(email,password)
-        if (logged) {
-           navigate('/')
-           return
+        let signed = actions.signup(email,password)
+        if (signed) {
+            navigate('/login')
         }
-        // setPassword("")
-        // setEmail("")
-        navigate('/signup')
-        alert("User does not exist. Please signup")
+        setPassword("")
+        setEmail("")
     }
 
 	return (

@@ -26,7 +26,7 @@ def login():
     if email != get_user.email or password != get_user.password:
         return jsonify({"msg": "Bad email or password"}), 401
     access_token = create_access_token(identity=email)
-    return jsonify(access_token=access_token)
+    return jsonify({'access_token':access_token, 'current_user':get_user.serialize()})
 
 # Protect a route with jwt_required, which will kick out requests
 # without a valid JWT present.
@@ -45,6 +45,19 @@ def get_profile():
     }
     return jsonify(response_body), 200
 
+# Protect a route with jwt_required, which will kick out requests
+# without a valid JWT present.
+@api.route("/check-token", methods=["GET"])
+@jwt_required()
+def check_token():
+    # Access the identity of the current user with get_jwt_identity
+    current_user = get_jwt_identity()
+    # Get token status
+    results_query = User.query.filter_by(email=current_user).first()
+    if not results_query:
+        return jsonify(logged=False), 404
+    return jsonify(logged=True), 200
+
 # Create a route to signup a new user.
 @api.route("/signup", methods=["POST"])
 def signup():
@@ -60,6 +73,5 @@ def signup():
 
     db.session.add(new_user)
     db.session.commit()
-    # new_user_add = new_user.serialize()
 
     return jsonify({"msg": "New user created", "new user": new_user.serialize()}), 200
