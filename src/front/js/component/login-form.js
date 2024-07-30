@@ -10,13 +10,15 @@ export const LoginForm = () => {
 
     async function handleSubmit(e) {
         e.preventDefault()
+        if (email == "" || password == ""){
+            alert("Neither Email nor Password must be blank")
+            return
+        }
         let logged = await actions.login(email,password)
         if (logged) {
            navigate('/')
            return
         }
-        // setPassword("")
-        // setEmail("")
         navigate('/signup')
         alert("User does not exist. Please signup")
     }
