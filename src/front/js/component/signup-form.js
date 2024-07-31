@@ -17,6 +17,7 @@ export const SignupForm = () => {
         let signed = actions.signup(email,password)
         if (signed) {
             navigate('/login')
+            alert(`Sign up was successful. Welcome ${email}, please log in to continue to the site`)
             return
         }
         setPassword("")

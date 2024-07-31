@@ -61,15 +61,16 @@ def check_token():
 # Create a route to signup a new user.
 @api.route("/signup", methods=["POST"])
 def signup():
-    data = request.get_json()
-    if not data:
-        return jsonify({"error": "no data"}), 404
+    email = request.json.get("email", None)
+    password = request.json.get("password", None)
+    if not email or not password:
+        return jsonify({"error": "Neither email nor password can be blank"}), 404
 
-    check_email = User.query.filter_by(email = data['email']).first()
+    check_email = User.query.filter_by(email = email).first()
     if check_email:
         return jsonify({"error": "Email address already exists"}), 404
     
-    new_user = User(email = data["email"], is_active = True, password = data["password"])
+    new_user = User(email = email, is_active = True, password = password)
 
     db.session.add(new_user)
     db.session.commit()
